@@ -8,8 +8,8 @@ if Process.arguments.count != 2 {
 var keyword = Process.arguments[1]
 let api = Search.Repository(searchKeyword: keyword)
 
-APIClient.sendRequest(api) {
-    switch $0 {
+APIClient.sendRequest(api) { result in
+    switch result {
     case let .Success(value):
         for item in value.items {
             print(item.owner.login + "/" + item.name)
