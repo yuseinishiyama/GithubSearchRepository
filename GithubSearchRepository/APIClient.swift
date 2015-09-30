@@ -9,10 +9,10 @@
 import Foundation
 
 struct APIClient {
-    static func sendRequest<T: API>(API: T, completion: Result<T.ResponseType, APIClientError> -> Void) throws {
+    static func sendRequest<T: API>(API: T, completion: Result<T.ResponseType, APIClientError> -> Void) {
         let url = API.baseURL.URLByAppendingPathComponent(API.path)
         guard let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: false) else {
-            throw APIClientError.URLCompositionError
+            return completion(.Failure(APIClientError.URLCompositionError))
         }
 
         let request: NSMutableURLRequest
@@ -20,7 +20,7 @@ struct APIClient {
         case .GET:
             components.percentEncodedQuery = API.parameters.queryString()
             guard let urlWithQuery = components.URL else {
-                throw APIClientError.URLCompositionError
+                return completion(.Failure(APIClientError.URLCompositionError))
             }
             request = NSMutableURLRequest(URL: urlWithQuery)
             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
