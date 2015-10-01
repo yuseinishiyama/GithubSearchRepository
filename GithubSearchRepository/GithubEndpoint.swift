@@ -16,13 +16,13 @@ protocol Pageable {
     init(totalCount: Int, items: [ItemType], links: Links)
 }
 
-protocol GithubAPI : API {}
+protocol GithubEndpoint : Endpoint {}
 
-extension GithubAPI {
+extension GithubEndpoint {
     var baseURL: NSURL { return NSURL(string: "https://api.github.com")! }
 }
 
-extension GithubAPI where Self.ResponseType: Pageable {
+extension GithubEndpoint where Self.ResponseType: Pageable {
     func parseResponse(data: NSData, URLResponse: NSURLResponse) throws -> ResponseType {
         do {
             guard let dic = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String : AnyObject] else {
@@ -57,7 +57,7 @@ extension GithubAPI where Self.ResponseType: Pageable {
 }
 
 struct Search {
-    struct Repository : GithubAPI {
+    struct Repository : GithubEndpoint {
         typealias ResponseType = Repositories
 
         let searchKeyword: String

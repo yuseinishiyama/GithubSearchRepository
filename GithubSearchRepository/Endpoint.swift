@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol API {
+protocol Endpoint {
     typealias ResponseType
 
     var baseURL: NSURL { get }
@@ -22,7 +22,7 @@ protocol JSONDecodable {
     init(JSON: [String : AnyObject]) throws
 }
 
-extension API where Self.ResponseType: JSONDecodable {
+extension Endpoint where Self.ResponseType: JSONDecodable {
     func parseResponse(data: NSData, URLResponse: NSURLResponse) throws -> ResponseType {
         do {
             guard let dictionary = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String : AnyObject] else {

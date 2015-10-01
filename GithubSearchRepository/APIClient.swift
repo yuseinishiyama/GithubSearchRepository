@@ -9,16 +9,16 @@
 import Foundation
 
 struct APIClient {
-    static func sendRequest<T: API>(API: T, completion: Result<T.ResponseType, APIClientError> -> Void) {
-        let url = API.baseURL.URLByAppendingPathComponent(API.path)
+    static func sendRequest<T: Endpoint>(Endpoint: T, completion: Result<T.ResponseType, APIClientError> -> Void) {
+        let url = Endpoint.baseURL.URLByAppendingPathComponent(Endpoint.path)
         guard let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: false) else {
             return completion(.Failure(APIClientError.URLCompositionError))
         }
 
         let request: NSMutableURLRequest
-        switch API.method {
+        switch Endpoint.method {
         case .GET:
-            components.percentEncodedQuery = API.parameters.queryString()
+            components.percentEncodedQuery = Endpoint.parameters.queryString()
             guard let urlWithQuery = components.URL else {
                 return completion(.Failure(APIClientError.URLCompositionError))
             }
@@ -26,7 +26,7 @@ struct APIClient {
             request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         }
 
-        request.HTTPMethod = API.method.rawValue
+        request.HTTPMethod = Endpoint.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Accept")
 
         let session = NSURLSession.sharedSession()
@@ -34,7 +34,7 @@ struct APIClient {
             (data, response, error) -> () in
             if let data = data, let response = response {
                 do {
-                    let response = try API.parseResponse(data, URLResponse: response)
+                    let response = try Endpoint.parseResponse(data, URLResponse: response)
                     return completion(.Success(response))
                 } catch {
                     return completion(.Failure(error as! APIClientError))
