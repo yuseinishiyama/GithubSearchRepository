@@ -8,12 +8,33 @@
 
 import Foundation
 
-protocol Pageable {
-    typealias ItemType: JSONDecodable
-    var totalCount: Int { get }
-    var links: Links { get }
-    var items: [ItemType] { get }
-    init(totalCount: Int, items: [ItemType], links: Links)
+struct PaginatedResponse<Item: JSONDecodable>: ResponseType {
+    let totalCount: Int
+    let links: Links
+    let items: [Item]
+
+    init(JSON: AnyObject, URLResponse: NSHTTPURLResponse) throws {
+        guard let totalCount = JSON["total_count"] as? Int else {
+            throw APIClientError.InvalidDataType(JSON)
+        }
+        self.totalCount = totalCount
+
+        self.links = Links(HTTPURLResponse: URLResponse)
+
+        guard let itemDictionaries = JSON["items"] as? Array<[String : AnyObject]> else {
+            throw APIClientError.InvalidDataType(JSON)
+        }
+        var items: [Item] = []
+        for itemDictionary in itemDictionaries {
+            do {
+                let item = try Item(JSON: itemDictionary)
+                items.append(item)
+            } catch {
+                throw APIClientError.JSONMappingError(itemDictionary)
+            }
+        }
+        self.items = items
+    }
 }
 
 protocol GithubEndpoint : Endpoint {}
@@ -22,43 +43,9 @@ extension GithubEndpoint {
     var baseURL: NSURL { return NSURL(string: "https://api.github.com")! }
 }
 
-extension GithubEndpoint where Self.Response: Pageable {
-    func parseResponse(data: NSData, URLResponse: NSURLResponse) throws -> Response {
-        do {
-            guard let dic = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String : AnyObject] else {
-                throw APIClientError.InvalidDataType(data)
-            }
-
-            guard let itemDictionaries = dic["items"] as? Array<[String : AnyObject]> else {
-                throw APIClientError.InvalidDataType(data)
-            }
-
-            var items: [Response.ItemType] = []
-            for itemDictionary in itemDictionaries {
-                do {
-                    let item = try Response.ItemType(JSON: itemDictionary)
-                    items.append(item)
-                } catch {
-                    throw APIClientError.JSONMappingError(itemDictionary)
-                }
-            }
-
-            let links = Links(HTTPURLResponse: URLResponse as! NSHTTPURLResponse)
-
-            guard let totalCount = dic["total_count"] as? Int else {
-                throw APIClientError.InvalidDataType(data)
-            }
-
-            return Response(totalCount: totalCount, items: items, links: links)
-        } catch {
-            throw APIClientError.JSONSerializationError(error)
-        }
-    }
-}
-
 struct Search {
     struct Repository : GithubEndpoint {
-        typealias Response = Repositories
+        typealias Response = PaginatedResponse<GithubSearchRepository.Repository>
 
         let searchKeyword: String
         init(searchKeyword: String) { self.searchKeyword = searchKeyword }

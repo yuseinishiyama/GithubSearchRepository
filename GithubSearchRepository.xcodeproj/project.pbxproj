@@ -15,7 +15,6 @@
 		AB3934F51BA59F8A009F07EC /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3934E91BA59F8A009F07EC /* HTTPMethod.swift */; settings = {ASSET_TAGS = (); }; };
 		AB3934F61BA59F8A009F07EC /* Links.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3934EA1BA59F8A009F07EC /* Links.swift */; settings = {ASSET_TAGS = (); }; };
 		AB3934F71BA59F8A009F07EC /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3934EB1BA59F8A009F07EC /* main.swift */; settings = {ASSET_TAGS = (); }; };
-		AB3934F81BA59F8A009F07EC /* Repositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3934EC1BA59F8A009F07EC /* Repositories.swift */; settings = {ASSET_TAGS = (); }; };
 		AB3934F91BA59F8A009F07EC /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3934ED1BA59F8A009F07EC /* Repository.swift */; settings = {ASSET_TAGS = (); }; };
 		AB3934FA1BA59F8A009F07EC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3934EE1BA59F8A009F07EC /* Result.swift */; settings = {ASSET_TAGS = (); }; };
 		AB3934FB1BA59F8A009F07EC /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3934EF1BA59F8A009F07EC /* User.swift */; settings = {ASSET_TAGS = (); }; };
@@ -43,7 +42,6 @@
 		AB3934E91BA59F8A009F07EC /* HTTPMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
 		AB3934EA1BA59F8A009F07EC /* Links.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Links.swift; sourceTree = "<group>"; };
 		AB3934EB1BA59F8A009F07EC /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		AB3934EC1BA59F8A009F07EC /* Repositories.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Repositories.swift; sourceTree = "<group>"; };
 		AB3934ED1BA59F8A009F07EC /* Repository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		AB3934EE1BA59F8A009F07EC /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		AB3934EF1BA59F8A009F07EC /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -98,7 +96,6 @@
 			children = (
 				AB3934ED1BA59F8A009F07EC /* Repository.swift */,
 				AB3934EF1BA59F8A009F07EC /* User.swift */,
-				AB3934EC1BA59F8A009F07EC /* Repositories.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -164,7 +161,6 @@
 				AB3934F71BA59F8A009F07EC /* main.swift in Sources */,
 				AB3934F51BA59F8A009F07EC /* HTTPMethod.swift in Sources */,
 				AB3934F21BA59F8A009F07EC /* APIClientError.swift in Sources */,
-				AB3934F81BA59F8A009F07EC /* Repositories.swift in Sources */,
 				AB3934F61BA59F8A009F07EC /* Links.swift in Sources */,
 				AB3934F91BA59F8A009F07EC /* Repository.swift in Sources */,
 				AB3934FB1BA59F8A009F07EC /* User.swift in Sources */,
