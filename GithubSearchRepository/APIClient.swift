@@ -18,7 +18,7 @@ struct APIClient {
         let request: NSMutableURLRequest
         switch Endpoint.method {
         case .GET:
-            components.percentEncodedQuery = Endpoint.parameters.queryString()
+            components.queryItems = Endpoint.parameters.queryItems()
             guard let urlWithQuery = components.URL else {
                 return completion(.Failure(APIClientError.URLCompositionError))
             }
