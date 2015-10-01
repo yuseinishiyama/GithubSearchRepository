@@ -9,12 +9,10 @@
 import Foundation
 
 extension Dictionary {
-    func queryString() -> String {
-        let keyValuePairs = self.map { key, value -> String in
-            let stringValue = (value as? String) ?? "\(value)"
-            return "\(key)=\(stringValue)"
+    func queryItems() -> [NSURLQueryItem] {
+        return self.map { key, value -> NSURLQueryItem in
+            return NSURLQueryItem(name: String(key),
+                                 value: String(value))
         }
-
-        return keyValuePairs.joinWithSeparator("&")
     }
 }
