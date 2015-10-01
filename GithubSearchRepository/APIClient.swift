@@ -9,7 +9,7 @@
 import Foundation
 
 struct APIClient {
-    static func sendRequest<T: Endpoint>(Endpoint: T, completion: Result<T.ResponseType, APIClientError> -> Void) {
+    static func sendRequest<T: Endpoint>(Endpoint: T, completion: Result<T.Response, APIClientError> -> Void) {
         let url = Endpoint.baseURL.URLByAppendingPathComponent(Endpoint.path)
         guard let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: false) else {
             return completion(.Failure(APIClientError.URLCompositionError))

@@ -9,28 +9,28 @@
 import Foundation
 
 protocol Endpoint {
-    typealias ResponseType
+    typealias Response
 
     var baseURL: NSURL { get }
     var parameters: [String : AnyObject] { get }
     var path: String { get }
     var method: HTTPMethod { get }
-    func parseResponse(data: NSData, URLResponse: NSURLResponse) throws -> ResponseType
+    func parseResponse(data: NSData, URLResponse: NSURLResponse) throws -> Response
 }
 
 protocol JSONDecodable {
     init(JSON: [String : AnyObject]) throws
 }
 
-extension Endpoint where Self.ResponseType: JSONDecodable {
-    func parseResponse(data: NSData, URLResponse: NSURLResponse) throws -> ResponseType {
+extension Endpoint where Self.Response: JSONDecodable {
+    func parseResponse(data: NSData, URLResponse: NSURLResponse) throws -> Response {
         do {
             guard let dictionary = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String : AnyObject] else {
                 throw APIClientError.InvalidDataType(data)
             }
 
             do {
-                return try ResponseType(JSON: dictionary)
+                return try Response(JSON: dictionary)
             } catch {
                 throw error
             }

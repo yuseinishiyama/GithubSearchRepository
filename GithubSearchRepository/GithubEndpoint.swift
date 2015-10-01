@@ -22,8 +22,8 @@ extension GithubEndpoint {
     var baseURL: NSURL { return NSURL(string: "https://api.github.com")! }
 }
 
-extension GithubEndpoint where Self.ResponseType: Pageable {
-    func parseResponse(data: NSData, URLResponse: NSURLResponse) throws -> ResponseType {
+extension GithubEndpoint where Self.Response: Pageable {
+    func parseResponse(data: NSData, URLResponse: NSURLResponse) throws -> Response {
         do {
             guard let dic = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String : AnyObject] else {
                 throw APIClientError.InvalidDataType(data)
@@ -33,10 +33,10 @@ extension GithubEndpoint where Self.ResponseType: Pageable {
                 throw APIClientError.InvalidDataType(data)
             }
 
-            var items: [ResponseType.ItemType] = []
+            var items: [Response.ItemType] = []
             for itemDictionary in itemDictionaries {
                 do {
-                    let item = try ResponseType.ItemType(JSON: itemDictionary)
+                    let item = try Response.ItemType(JSON: itemDictionary)
                     items.append(item)
                 } catch {
                     throw APIClientError.JSONMappingError(itemDictionary)
@@ -49,7 +49,7 @@ extension GithubEndpoint where Self.ResponseType: Pageable {
                 throw APIClientError.InvalidDataType(data)
             }
 
-            return ResponseType(totalCount: totalCount, items: items, links: links)
+            return Response(totalCount: totalCount, items: items, links: links)
         } catch {
             throw APIClientError.JSONSerializationError(error)
         }
@@ -58,7 +58,7 @@ extension GithubEndpoint where Self.ResponseType: Pageable {
 
 struct Search {
     struct Repository : GithubEndpoint {
-        typealias ResponseType = Repositories
+        typealias Response = Repositories
 
         let searchKeyword: String
         init(searchKeyword: String) { self.searchKeyword = searchKeyword }
