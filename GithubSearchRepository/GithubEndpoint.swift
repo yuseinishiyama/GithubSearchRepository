@@ -21,7 +21,9 @@ struct PaginatedResponse<Item: JSONDecodable>: ResponseType {
 
         self.links = Links(HTTPURLResponse: URLResponse)
 
-        guard let itemDictionaries = JSON["items"] as? Array<[String : AnyObject]> else {
+        guard let itemDictionaries =
+            JSON["items"] as? Array<[String : AnyObject]> else
+        {
             throw APIClientError.InvalidDataType(JSON)
         }
         var items: [Item] = []
@@ -45,7 +47,7 @@ extension GithubEndpoint {
 
 struct Search {
     struct Repository : GithubEndpoint {
-        typealias Response = PaginatedResponse<GithubSearchRepository.Repository>
+        typealias Response = Repositories
 
         let searchKeyword: String
         init(searchKeyword: String) { self.searchKeyword = searchKeyword }

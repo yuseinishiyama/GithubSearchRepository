@@ -23,17 +23,18 @@ protocol JSONDecodable {
 }
 
 extension Endpoint where Self.Response: JSONDecodable {
-    func parseResponse(data: NSData, URLResponse: NSURLResponse) throws -> Response {
+    func parseResponse(data: NSData,
+                URLResponse: NSURLResponse) throws -> Response
+    {
         do {
-            guard let dictionary = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String : AnyObject] else {
+            guard let dictionary =
+                try NSJSONSerialization.JSONObjectWithData(
+                    data, options: []) as? [String : AnyObject] else
+            {
                 throw APIClientError.InvalidDataType(data)
             }
 
-            do {
-                return try Response(JSON: dictionary)
-            } catch {
-                throw error
-            }
+            return try Response(JSON: dictionary)
         } catch {
             throw APIClientError.JSONSerializationError(error)
         }
@@ -44,14 +45,17 @@ protocol ResponseType {
     init(JSON: AnyObject, URLResponse: NSHTTPURLResponse) throws
 }
 
-extension GithubEndpoint where Self.Response: ResponseType {
-    func parseResponse(data: NSData, URLResponse: NSURLResponse) throws -> Response {
+extension Endpoint where Self.Response: ResponseType {
+    func parseResponse(data: NSData,
+                URLResponse: NSURLResponse) throws -> Response
+    {
         do {
-            guard let dictionary =
-                try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String : AnyObject] else {
-                    throw APIClientError.InvalidDataType(data)
-            }
-            return try Response(JSON: dictionary, URLResponse: URLResponse as! NSHTTPURLResponse)
+            let JSON =
+            try NSJSONSerialization.JSONObjectWithData(data,
+                                                       options: [])
+            
+            return try Response(JSON: JSON,
+                         URLResponse: URLResponse as! NSHTTPURLResponse)
         } catch {
             throw APIClientError.JSONSerializationError(error)
         }

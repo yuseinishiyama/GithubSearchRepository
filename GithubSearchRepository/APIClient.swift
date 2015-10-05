@@ -9,24 +9,35 @@
 import Foundation
 
 struct APIClient {
-    static func sendRequest<T: Endpoint>(Endpoint: T, completion: Result<T.Response, APIClientError> -> Void) {
-        let url = Endpoint.baseURL.URLByAppendingPathComponent(Endpoint.path)
-        guard let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: false) else {
+    static func sendRequest<T: Endpoint>(
+        endpoint: T,
+        completion: Result<T.Response, APIClientError> -> Void)
+    {
+        let url = endpoint.baseURL.URLByAppendingPathComponent(endpoint.path)
+        guard let components = NSURLComponents(URL: url,
+                           resolvingAgainstBaseURL: false) else
+        {
             return completion(.Failure(APIClientError.URLCompositionError))
         }
 
         let request: NSMutableURLRequest
-        switch Endpoint.method {
+        switch endpoint.method {
         case .GET:
-            components.queryItems = Endpoint.parameters.queryItems()
+            let queryItems = endpoint.parameters.map {
+                key, value -> NSURLQueryItem in
+                return NSURLQueryItem(name: String(key),
+                                     value: String(value))
+            }
+            components.queryItems = queryItems
             guard let urlWithQuery = components.URL else {
                 return completion(.Failure(APIClientError.URLCompositionError))
             }
             request = NSMutableURLRequest(URL: urlWithQuery)
-            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            request.setValue("application/x-www-form-urlencoded",
+                             forHTTPHeaderField: "Content-Type")
         }
 
-        request.HTTPMethod = Endpoint.method.rawValue
+        request.HTTPMethod = endpoint.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Accept")
 
         let session = NSURLSession.sharedSession()
@@ -34,7 +45,7 @@ struct APIClient {
             (data, response, error) -> () in
             if let data = data, let response = response {
                 do {
-                    let response = try Endpoint.parseResponse(data, URLResponse: response)
+                    let response = try endpoint.parseResponse(data, URLResponse: response)
                     return completion(.Success(response))
                 } catch {
                     return completion(.Failure(error as! APIClientError))

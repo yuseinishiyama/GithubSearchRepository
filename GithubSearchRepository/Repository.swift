@@ -36,3 +36,5 @@ struct Repository : JSONDecodable {
         }
     }
 }
+
+typealias Repositories = PaginatedResponse<Repository>

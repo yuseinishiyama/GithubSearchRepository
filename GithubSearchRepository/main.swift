@@ -6,9 +6,9 @@ if Process.arguments.count != 2 {
 }
 
 var keyword = Process.arguments[1]
-let api = Search.Repository(searchKeyword: keyword)
+let request = Search.Repository(searchKeyword: keyword)
 
-APIClient.sendRequest(api) { result in
+APIClient.sendRequest(request) { result in
     switch result {
     case let .Success(value):
         for item in value.items {
@@ -21,6 +21,7 @@ APIClient.sendRequest(api) { result in
     }
 }
 
-NSThread.sleepForTimeInterval(100)
+let timeoutInterval: NSTimeInterval = 60
+NSThread.sleepForTimeInterval(timeoutInterval)
 print("Connection timeout")
 exit(1)
